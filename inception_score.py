@@ -523,7 +523,7 @@ class Inception(Chain):
             logit=L.Linear(2048, 1008)
         )
 
-    def __call__(self, x):
+    def __call__(self, x, get_feature=False):
         """Input dims are (batch_size, 3, 299, 299)."""
 
         # assert x.shape[1:] == (3, 299, 299)
@@ -587,11 +587,14 @@ class Inception(Chain):
 
         h = F.average_pooling_2d(h, 8, 1)
         # assert h.shape[1:] == (2048, 1, 1)
-
         h = F.reshape(h, (-1, 2048))
-        h = self.logit(h)
-        h = F.softmax(h)
 
-        # assert h.shape[1:] == (1008,)
+        if get_feature:
+            return h
+        else:
+            h = self.logit(h)
+            h = F.softmax(h)
 
-        return h
+            # assert h.shape[1:] == (1008,)
+
+            return h
