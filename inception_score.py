@@ -95,7 +95,7 @@ class Tower(Chain):
                 else:
                     h = getattr(self, name)(h)
             else:  # AveragePooling2D, MaxPooling2D or ReLU
-                h = f(h)
+                h = f.apply((h,))[0]
         return h
 
 
